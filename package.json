@@ -1,0 +1,16 @@
+{
+  "name": "library-api",
+  "version": "1.0.0",
+  "description": "primdev intermediate class back-end 2026 project",
+  "license": "ISC",
+  "author": "Bisma Semara",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "dev": "nodemon index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "express": "^5.2.1"
+  }
+}
