@@ -1,50 +1,153 @@
 import express from "express";
-import { books } from "./data.js";
+import prisma from "./database.js";
 
 const app = express();
 const port = 3000;
 
-app.get("/books", (req, res) => {
-  res.send(books);
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
+app.get("/books", async (req, res) => {
+  //menggunakan prisma client untuk mengambil semua data buku dari database
+  const books = await prisma.books.findMany();
+  res.json({
+    success: true,
+    message: "Books retrieved Successfully",
+    data: books,
+  });
 });
 
-app.get("/books", (req, res) => {
-  res.send("List of books will be here");
-});
-
-// Ini adalah route yang harus dibuat
-app.get("/books/:id", (req, res) => {
+app.get("/books/:id", async (req, res) => {
+  // dapatkan ID buku yang akan diupdate  dari param URL
+  // Selanjutnya mengubah tipe datanya menjadi integer menggunakan parseInt
   const id = parseInt(req.params.id);
 
-  //mencari buku dengan id yang sesuai
-  const book = books.find((book) => book.id === id);
+  //fungsi untuk mengambil buku denga ID yang sesuai dari database
+  const book = await prisma.books.findUnique({
+    where: {
+      id: id,
+    },
+  });
 
-  //jika buku tidak ditemukan,, kirimkan pesan error
+  //pengkondisian ketika buku ditemukan atau tidak
   if (!book) {
-    res.send(`Book with ID: ${id} not found`);
+    return res.json({
+      success: false,
+      message: `Book with ID: ${id} not found`,
+    });
   }
-  res.send(book);
+  res.json({
+    success: true,
+    message: `Book with ID: ${id} not found`,
+    data: book,
+  });
 });
 
 //post method
-app.post("/books", (req, res) => {
-  res.send("Book created successfully");
+app.post("/books", async (req, res) => {
+  // mendapatkan data buku baru dengan merequest ke body
+  const { title, author, year } = req.body;
+  //menambahkan data buku baru ke database
+  const book = await prisma.books.create({
+    data: {
+      title,
+      author,
+      year,
+    },
+  });
+  res.json({
+    success: true,
+    message: "Book created successfully",
+    data: book,
+  });
 });
 
 //Put Method
-app.put("/books/:id", (req, res) => {
-  const id = req.params.id;
+app.put("/books/:id", async (req, res) => {
+  // dapatkan ID buku yang akan diupdate  dari param URL
+  // Selanjutnya mengubah tipe datanya menjadi integer menggunakan parseInt
+  const id = parseInt(req.params.id);
 
-  res.send(`Book with ID: ${id} update successfully`);
+  // Mencari data buku dengan ID yang sesuai dengan database
+  const book = await prisma.books.findUnique({
+    where: {
+      id: id,
+    },
+  });
+  //pengkondisian ketika buku ditemukan atau tidak
+  if (!book) {
+    return res.json({
+      success: false,
+      message: `Book with ID: ${id} not found`,
+    });
+  }
+
+  // Update buku dengan ID yang dimasukan menggunakan Prisma Client
+  await prisma.books.update({
+    where: {
+      id: id,
+    },
+    data: {
+      title,
+      author,
+      year,
+    },
+  });
+
+  res.json({
+    success: true,
+    message: "Book updated successfully",
+    data: book,
+  });
 });
 
 // Delete Method
-app.delete("/books/:id", (req, res) => {
-  const id = req.params.id;
+app.delete("/books/:id", async (req, res) => {
+  // dapatkan ID buku yang akan diupdate  dari param URL
+  // Selanjutnya mengubah tipe datanya menjadi integer menggunakan parseInt
+  const id = parseInt(req.params.id);
 
-  res.send(`Books with ID: ${id} deletes successfully`);
+  // Gunakan Prisma Clienet untuk mencari buku dengan ID yang sesuai di database
+  const book = await prisma.books.findUnique({
+    where: {
+      id: id,
+    },
+  });
+  //pengkondisian ketika buku ditemukan atau tidak
+  if (!book) {
+    return res.json({
+      success: false,
+      message: `Book with ID: ${id} not found`,
+    });
+  }
+
+  // Menghapus data buku dari database sesuai dengan ID buku menggunakan prisma client
+  await prisma.books.delete({
+    where: {
+      id: id,
+    },
+  });
+  res.json({
+    success: true,
+    message: "Book deleted successfully",
+  });
 });
 
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);
 });
+// Middleware untuk parsing JSON pada request body
+
+// // Ini adalah route yang harus dibuat
+// app.get("/books/:id", (req, res) => {
+//   const id = parseInt(req.params.id);
+
+//   //mencari buku dengan id yang sesuai
+//   const book = books.find((book) => book.id === id);
+
+//   //jika buku tidak ditemukan,, kirimkan pesan error
+//   if (!book) {
+//     res.send(`Book with ID: ${id} not found`);
+//   }
+//   res.send(book);
+// });
