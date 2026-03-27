@@ -133,6 +133,78 @@ app.delete("/books/:id", async (req, res) => {
   });
 });
 
+//get user
+app.get('/users', (req, res) => {
+    res.send(users)
+})
+
+app.get('/users/:id',(req, res) => {
+
+    //merubah tipe data menjadi integer menggunakan parseInt
+    const id = parseInt(req.params.id)
+    //mencari user dengan Id yang sesuai
+    const user = users.find((user) => user.id === id)
+    //jika id user tidak ditemukan
+    if (!user) {
+        res.send(`User with ID: ${id} not found !`)
+    }
+
+    res.send(user)
+})
+
+// POST User
+app.post('/users', (req, res) => {
+    
+    const {name, email, role } = req.body
+
+    const newId = users.length + 1
+
+    const newUser = { id: newId, name, email, role}
+
+    users.push(newUser)
+
+    res.send('User created successfully')
+ })
+  
+// PUT User
+app.put('/users/:id', (req, res) => {
+    const id = parseInt(req.params.id)
+
+    const {name, email, role } = req.body
+
+    const userIndex = users.findIndex((user) => user.id === id)
+    
+    if (userIndex === -1) {
+        res.send(`User with ID: ${id} not found`)
+        return
+      }
+
+      users[userIndex] = {
+        id: users[userIndex].id,
+        name,
+        email,
+        role,
+    }
+
+    res.send(`User with ID: ${id} updated successfully`)
+})
+  
+// DELETE User
+app.delete('/users/:id', (req, res) => {
+    const id = parseInt(req.params.id)
+
+    const userIndex = users.findIndex((user) => user.id === id)
+
+    if (userIndex === -1) {
+        res.send(`User with ID: ${id} not found`)
+        return
+      }
+
+      users.splice(userIndex, 1)
+    
+    res.send(`User with ID: ${id} deleted successfully`)
+})
+
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);
 });
