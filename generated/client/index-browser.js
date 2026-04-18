@@ -135,6 +135,30 @@ exports.Prisma.BooksScalarFieldEnum = {
   author: 'author',
   year: 'year',
   available: 'available',
+  createdAt: 'createdAt',
+  categoryId: 'categoryId'
+};
+
+exports.Prisma.ProfilesScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  address: 'address',
+  phone: 'phone',
+  createdAt: 'createdAt'
+};
+
+exports.Prisma.CategoriesScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  createAt: 'createAt'
+};
+
+exports.Prisma.BorrowingsScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  bookId: 'bookId',
+  borrow_date: 'borrow_date',
+  returned_at: 'returned_at',
   createdAt: 'createdAt'
 };
 
@@ -148,10 +172,18 @@ exports.Prisma.QueryMode = {
   insensitive: 'insensitive'
 };
 
+exports.Prisma.NullsOrder = {
+  first: 'first',
+  last: 'last'
+};
+
 
 exports.Prisma.ModelName = {
   Users: 'Users',
-  Books: 'Books'
+  Books: 'Books',
+  Profiles: 'Profiles',
+  Categories: 'Categories',
+  Borrowings: 'Borrowings'
 };
 
 /**
