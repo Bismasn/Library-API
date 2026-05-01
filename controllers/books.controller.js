@@ -38,10 +38,23 @@ export const getBookById = async (req, res) => {
 
 export const createBook = async (req, res) => {
   // mendapatkan data buku baru dengan merequest ke body
-  const { title, author, year } = req.body;
+  const { categoryId, title, author, year } = req.body;
   //menambahkan data buku baru ke database
+  const categoryExists = await prisma.categories.findUnique({
+    where: {
+      id: id,
+    },
+  });
+
+  if (!categoryExists) {
+    return res.json({
+      success: false,
+      message: `Category with ID: ${categoryId} not found`,
+    });
+  }
   const book = await prisma.books.create({
     data: {
+      categoryId,
       title,
       author,
       year,
@@ -59,6 +72,8 @@ export const updateBook = async (req, res) => {
   // Selanjutnya mengubah tipe datanya menjadi integer menggunakan parseInt
   const id = parseInt(req.params.id);
 
+  const { categoryId, title, author, year } = req.body;
+
   // Mencari data buku dengan ID yang sesuai dengan database
   const book = await prisma.books.findUnique({
     where: {
@@ -73,12 +88,27 @@ export const updateBook = async (req, res) => {
     });
   }
 
+  // Mengecek apakah kategori dengan ID yang diberikan ada di database menggunakan fungsi isCategoryExist
+  const categoryExists = await prisma.categories.findUnique({
+    where: {
+      id: id,
+    },
+  });
+
+  if (!categoryExists) {
+    return res.json({
+      success: false,
+      message: `Category with ID: ${categoryId} not found`,
+    });
+  }
+
   // Update buku dengan ID yang dimasukan menggunakan Prisma Client
   await prisma.books.update({
     where: {
       id: id,
     },
     data: {
+      categoryId,
       title,
       author,
       year,

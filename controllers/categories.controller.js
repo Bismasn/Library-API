@@ -9,127 +9,16 @@ export const getAllCategories = async (req, res) => {
   });
 };
 
-export const getCategorieById = async (req, res) => {
+export const getCategoryById = async (req, res) => {
   //merubah tipe data menjadi integer menggunakan parseInt
   const id = parseInt(req.params.id);
   //mencari Categorie dengan Id yang sesuai
-  const categorie = await prisma.categories.findUnique({
+  const category = await prisma.categories.findUnique({
     where: {
       id: id,
     },
   });
   //jika id Categorie tidak ditemukan
-  if (!categorie) {
-    return res.json({
-      success: false,
-      message: `Categorie with ID: ${id} not found`,
-    });
-  }
-
-  res.json({
-    success: true,
-    message: "Categorie retrieved successfully",
-    data: categorie,
-  });
-};
-
-export const createCategorie = async (req, res) => {
-  const { name, createdAt } = req.body;
-
-  const categorie = await prisma.categories.create({
-    data: {
-      name,
-      createdAt,
-    },
-  });
-
-  res.json({
-    success: true,
-    message: "Categorie created successfully",
-    data: categorie,
-  });
-};
-
-export const updateCategorie = async (req, res) => {
-  const id = parseInt(req.params.id);
-
-  const { name, createdAt } = req.body;
-
-  const categorie = await prisma.categories.findUnique({
-    where: {
-      id: id,
-    },
-  });
-  // Jika Categorie tidak ditemukan, kirimkan pesan error
-  if (!categorie) {
-    return res.json({
-      success: false,
-      message: `Categorie with ID: ${id} not found`,
-    });
-  }
-
-  // Mengupdate Categorie dengan ID yang sesuai
-  await prisma.categories.update({
-    where: {
-      id: id,
-    },
-    data: {
-      name,
-      createdAt,
-    },
-  });
-
-  res.json({
-    success: true,
-    message: "Categorie updated successfully",
-    data: categorie,
-  });
-};
-
-export const deleteCategorie = async (req, res) => {
-  const id = parseInt(req.params.id);
-
-  const Categorie = await prisma.categories.findUnique({
-    where: {
-      id: id,
-    },
-  });
-
-  if (!Categorie) {
-    return res.json({
-      success: false,
-      message: `Categorie with ID: ${id} not found`,
-    });
-  }
-
-  await prisma.categories.delete({
-    where: {
-      id: id,
-    },
-  });
-
-  res.json({
-    success: true,
-    message: "Categorie deleted successfully",
-  });
-};
-
-export const getAllBooksByCategoryId = async (req, res) => {
-  // Mendapatkan ID kategori yang akan diupdate dari parameter URL
-  // Lalu mengubahnya menjadi tipe data integer menggunakan parseInt
-  const id = parseInt(req.params.id);
-
-  // Mengambil kategori dengan ID yang sesuai dari database menggunakan Prisma Client
-  const category = await prisma.categories.findUnique({
-    where: {
-      id: id,
-    },
-    include: {
-      books: true,
-    },
-  });
-
-  // Jika kategori tidak ditemukan, kirimkan pesan error
   if (!category) {
     return res.json({
       success: false,
@@ -141,5 +30,114 @@ export const getAllBooksByCategoryId = async (req, res) => {
     success: true,
     message: "Category retrieved successfully",
     data: category,
+  });
+};
+
+export const createCategory = async (req, res) => {
+  const { name } = req.body;
+
+  const category = await prisma.categories.create({
+    data: {
+      name,
+    },
+  });
+
+  res.json({
+    success: true,
+    message: "Category created successfully",
+    data: category,
+  });
+};
+
+export const updateCategory = async (req, res) => {
+  const id = parseInt(req.params.id);
+
+  const { name } = req.body;
+
+  const updateCategory = await prisma.categories.findUnique({
+    where: {
+      id: id,
+    },
+  });
+  // Jika Categorie tidak ditemukan, kirimkan pesan error
+  if (!category) {
+    return res.json({
+      success: false,
+      message: `Category with ID: ${id} not found`,
+    });
+  }
+
+  // Mengupdate Categorie dengan ID yang sesuai
+  await prisma.categories.update({
+    where: {
+      id: id,
+    },
+    data: {
+      name,
+    },
+  });
+
+  res.json({
+    success: true,
+    message: "Category updated successfully",
+    data: updateCategory,
+  });
+};
+
+export const deleteCategory = async (req, res) => {
+  const id = parseInt(req.params.id);
+
+  const category = await prisma.categories.findUnique({
+    where: {
+      id: id,
+    },
+  });
+
+  if (!category) {
+    return res.json({
+      success: false,
+      message: `Category with ID: ${id} not found`,
+    });
+  }
+
+  await prisma.categories.delete({
+    where: {
+      id: id,
+    },
+  });
+
+  res.json({
+    success: true,
+    message: "Categories deleted successfully",
+  });
+};
+
+export const getAllBooksByCategoryId = async (req, res) => {
+  // Mendapatkan ID kategori yang akan diupdate dari parameter URL
+  // Lalu mengubahnya menjadi tipe data integer menggunakan parseInt
+  const id = parseInt(req.params.id);
+
+  // Mengambil kategori dengan ID yang sesuai dari database menggunakan Prisma Client
+  const categoryWithBooks = await prisma.categories.findUnique({
+    where: {
+      id: id,
+    },
+    include: {
+      books: true,
+    },
+  });
+
+  // Jika kategori tidak ditemukan, kirimkan pesan error
+  if (!categoryWithBooks) {
+    return res.json({
+      success: false,
+      message: `Category with ID: ${id} not found`,
+    });
+  }
+
+  res.json({
+    success: true,
+    message: "Category retrieved successfully",
+    data: categoryWithBooks,
   });
 };
