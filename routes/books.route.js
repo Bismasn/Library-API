@@ -8,12 +8,17 @@ import {
   deleteBook,
 } from "../controllers/books.controller.js";
 
+import {
+  bookValidation,
+  updateBookValidation,
+} from "../validations/books.validation.js";
+
 const router = express.Router();
 
 router.get("/", getBooks);
 router.get("/:id", getBookById);
-router.post("/", createBook);
-router.put("/:id", updateBook);
+router.post('/', bookValidation, createBook)
+router.put("/:id", updateBookValidation, updateBook)
 router.delete("/:id", deleteBook);
 
 export default router;

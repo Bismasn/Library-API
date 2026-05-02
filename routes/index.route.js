@@ -2,8 +2,9 @@ import express from "express";
 import booksRoute from "./books.route.js";
 import userRoute from "./users.route.js";
 import profileRoute from "./profiles.route.js";
-// import categoryRoute from "./categories.route.js";
+import categoryRoute from "./categories.route.js";
 import borrowingsRoute from "./borrowing.route.js";
+import authRoute from "./auth.route.js";
 
 const router = express.Router();
 
@@ -14,7 +15,8 @@ router.get("/", (req, res) => {
 router.use("/books", booksRoute);
 router.use("/users", userRoute);
 router.use("/profiles", profileRoute);
-// router.use("/categories", categoryRoute);
+router.use("/categories", categoryRoute);
 router.use("/borrowings", borrowingsRoute);
+router.use("/auth", authRoute);
 
 export default router;

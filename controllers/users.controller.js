@@ -3,7 +3,7 @@ import prisma from "../database.config.js";
 export const getUsers = async (req, res) => {
   //menggunakan prisma client untuk mengambil semua data buku dari database
   const users = await prisma.users.findMany();
-  res.json({
+  res.status(200).json({
     success: true,
     message: "Users Berhasi dimuat",
     data: users,
@@ -22,12 +22,12 @@ export const getUserById = async (req, res) => {
   });
   //jika id user tidak ditemukan
   if (!user) {
-    return res.json({
+    return res.status(404).json({
       success: false,
       message: `User with ID: ${id} not found`,
     });
   }
-  res.json({
+  res.status(200).json({
     success: true,
     message: `User retrieved successfully`,
     data: user,
@@ -44,7 +44,7 @@ export const createUser = async (req, res) => {
     },
   });
 
-  res.json({
+  res.status(200).json({
     success: true,
     message: "User Created Successfully",
     data: newUser,
@@ -66,14 +66,14 @@ export const updateUser = async (req, res) => {
       role,
     },
   });
-  res.json({
+  res.status(200).json({
     success: true,
     message: `user with ID: ${id} updated successfully`,
     data: updatedUser,
   });
 
   if (!userIndex) {
-    return res.json({
+    return res.status(404).json({
       success: false,
       message: `User with ID: ${id} not found`,
     });
@@ -89,7 +89,7 @@ export const updateUser = async (req, res) => {
     },
   });
 
-  res.json({
+  res.status(200).json({
     success: true,
     message: `User with ID: ${id} not found`,
     data: user,
@@ -107,7 +107,7 @@ export const deleteUser = async (req, res) => {
 
   if (!userIndex) {
     res.send(`User with ID: ${id} not found`);
-    return res.json({
+    return res.status(404).json({
       success: false,
       message: `User with ID: ${id} not found`,
     });
@@ -118,7 +118,7 @@ export const deleteUser = async (req, res) => {
       id: id,
     },
   });
-  res.json({
+  res.status(200).json({
     success: true,
     message: "Users deleted successfully",
   });

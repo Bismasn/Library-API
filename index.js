@@ -13,6 +13,7 @@ app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);
 });
 
+
 // Middleware untuk parsing JSON pada request body
 
 // // Ini adalah route yang harus dibuat
