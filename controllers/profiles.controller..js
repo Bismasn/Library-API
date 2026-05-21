@@ -3,7 +3,7 @@ import prisma from "../database.config.js";
 export const getProfiles = async (req, res) => {
   //menggunakan prisma client untuk mengambil semua data buku dari database
   const profiles = await prisma.profiles.findMany();
-  res.json({
+  res.status(200).json({
     success: true,
     message: "profiles Berhasi dimuat",
     data: profiles,
@@ -22,12 +22,12 @@ export const getProfileById = async (req, res) => {
   });
   //jika id profile tidak ditemukan
   if (!profile) {
-    return res.json({
+    return res.status(404).json({
       success: false,
       message: `Profile with ID: ${id} not found`,
     });
   }
-  res.json({
+  res.status(200).json({
     success: true,
     message: `Profile  with ID: ${id} not found`,
   });
@@ -43,7 +43,7 @@ export const createProfile = async (req, res) => {
     },
   });
 
-  res.json({
+  res.status(200).json({
     success: true,
     message: "Profile Created Successfully",
     data: profile,
@@ -53,7 +53,14 @@ export const createProfile = async (req, res) => {
 export const updateProfile = async (req, res) => {
   const id = parseInt(req.params.id);
   const { userId, address, phone } = req.body;
-  const profileIndex = await prisma.profile.findIndex({
+
+  if (isNaN(id)) {
+    return res.status(400).json({
+      success: false,
+      message: "ID Profile Harus Berupa Angka yang Valid",
+    });
+  }
+  const updatedProfile = await prisma.profile.findIndex({
     where: {
       id: id,
     },
@@ -63,33 +70,16 @@ export const updateProfile = async (req, res) => {
       phone,
     },
   });
-  res.json({
-    success: true,
-    message: `profile with ID: ${id} updated successfully`,
-    data: updatedProfile,
-  });
-
-  if (!profileIndex) {
-    return res.json({
+  if (!updateProfile) {
+    return res.status(404).json({
       success: false,
       message: `Profile with ID: ${id} not found`,
     });
   }
-  await prisma.profiles.update({
-    where: {
-      id: id,
-    },
-    data: {
-      userId,
-      address,
-      phone,
-    },
-  });
-
-  res.json({
+  res.status(200).json({
     success: true,
-    message: `Profile with ID: ${id} not found`,
-    data: profile,
+    message: `profile with ID: ${id} updated successfully`,
+    data: updatedProfile,
   });
 };
 
@@ -104,7 +94,7 @@ export const deleteProfile = async (req, res) => {
 
   if (!profileIndex) {
     res.send(`Profile with ID: ${id} not found`);
-    return res.json({
+    return res.status(404).json({
       success: false,
       message: `Profile with ID: ${id} not found`,
     });
@@ -115,7 +105,7 @@ export const deleteProfile = async (req, res) => {
       id: id,
     },
   });
-  res.json({
+  res.status(200).json({
     success: true,
     message: "profiles deleted successfully",
   });

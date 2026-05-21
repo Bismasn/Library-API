@@ -8,7 +8,7 @@ export const getAllBorrowings = async (req, res) => {
       book: true,
     },
   });
-  res.json({
+  res.status(200).json({
     success: true,
     message: "borrowings retrieved Successfully",
     data: borrowings,
@@ -33,12 +33,12 @@ export const getBorrowingById = async (req, res) => {
 
   //pengkondisian ketika buku ditemukan atau tidak
   if (!borrowing) {
-    return res.json({
+    return res.status(404).json({
       success: false,
       message: `Borrowing with ID: ${id} not found`,
     });
   }
-  res.json({
+  res.status(200).json({
     success: true,
     message: `Borrowing with ID: ${id} not found`,
     data: borrowing,
@@ -46,12 +46,20 @@ export const getBorrowingById = async (req, res) => {
 };
 
 export const createBorrowing = async (req, res) => {
+  const validationErrors = validationResult(req);
+  if (!validationErrors.isEmpty()) {
+    return res.status(400).json({
+      success: false,
+      message: "validation error",
+      errors: validationErrors.array(),
+    });
+  }
   // mendapatkan data buku baru dengan merequest ke body
   const { userId, bookId } = req.body;
   //menambahkan data buku baru ke database
   const userExists = await isUserExist(userId);
   if (!userExists) {
-    return res.json({
+    return res.status(404).json({
       success: false,
       message: `User with ID: ${userId} not found`,
     });
@@ -59,7 +67,7 @@ export const createBorrowing = async (req, res) => {
 
   const bookExists = await isBookExist(bookId);
   if (!bookExists) {
-    return res.json({
+    return res.status(404).json({
       success: false,
       message: `Book with ID: ${bookId} not found`,
     });
@@ -82,7 +90,7 @@ export const createBorrowing = async (req, res) => {
     data: { available: false },
   });
 
-  res.json({
+  res.status(200).json({
     success: true,
     message: "Borrowing created successfully",
     data: borrowing,
@@ -100,7 +108,7 @@ export const returnBook = async (req, res) => {
 
   // Jika peminjaman tidak ditemukan, kirimkan pesan error
   if (!borrowing) {
-    return res.json({
+    return res.status(404).json({
       success: false,
       message: "Borrowing not found",
     });
@@ -108,7 +116,7 @@ export const returnBook = async (req, res) => {
 
   // Cek apakah buku sudah dikembalikan
   if (borrowing.returned_at) {
-    return res.json({
+    return res.status(200).json({
       success: false,
       message: "Book already returned",
     });
@@ -130,7 +138,7 @@ export const returnBook = async (req, res) => {
     data: { available: true },
   });
 
-  res.json({
+  res.status(200).json({
     success: true,
     message: "Book returned successfully",
     data: returnedBorrowing,
@@ -152,7 +160,7 @@ export const deleteBorrowing = async (req, res) => {
 
   // Jika peminjaman tidak ditemukan, kirimkan pesan error
   if (!borrowing) {
-    return res.json({
+    return res.status(404).json({
       success: false,
       message: "Borrowing not found",
     });
@@ -169,7 +177,7 @@ export const deleteBorrowing = async (req, res) => {
     });
   }
 
-  res.json({
+  res.status(200).json({
     success: true,
     message: "Borrowing deleted successfully",
     data: borrowing,

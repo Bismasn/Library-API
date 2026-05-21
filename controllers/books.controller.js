@@ -15,14 +15,12 @@ export const getBookById = async (req, res) => {
   // dapatkan ID buku yang akan diupdate  dari param URL
   // Selanjutnya mengubah tipe datanya menjadi integer menggunakan parseInt
   const id = parseInt(req.params.id);
-
   //fungsi untuk mengambil buku denga ID yang sesuai dari database
   const book = await prisma.books.findUnique({
     where: {
       id: id,
     },
   });
-
   //pengkondisian ketika buku ditemukan atau tidak
   if (!book) {
     return res.status(404).json({
@@ -105,7 +103,6 @@ export const updateBook = async (req, res) => {
       message: `Book with ID: ${id} not found`,
     });
   }
-
   // Mengecek apakah kategori dengan ID yang diberikan ada di database menggunakan fungsi isCategoryExist
   const categoryExists = await prisma.categories.findUnique({
     where: {
@@ -178,6 +175,5 @@ export const isBookExist = async (id) => {
       id: id,
     },
   });
-
   return !!book;
 };

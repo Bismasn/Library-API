@@ -35,6 +35,15 @@ export const getUserById = async (req, res) => {
 };
 
 export const createUser = async (req, res) => {
+  const validationErrors = validationResult(req);
+  if (!validationErrors.isEmpty()) {
+    return res.status(400).json({
+      success: false,
+      message: "validation error",
+      errors: validationErrors.array(),
+    });
+  }
+
   const { name, email, role } = req.body;
   const newUser = await prisma.user.create({
     data: {
@@ -52,11 +61,27 @@ export const createUser = async (req, res) => {
 };
 
 export const updateUser = async (req, res) => {
-  const id = parseInt(req.params.id);
+  const validationErrors = validationResult(req);
 
+  if (!validationErrors.isEmpty()) {
+    return res.status(400).json({
+      success: false,
+      message: "Validation error",
+      errors: validationErrors.array(),
+    });
+  }
+
+  const id = parseInt(req.params.id);
   const { name, email, role } = req.body;
 
-  const userIndex = await prisma.users.findIndex({
+  if (isNaN(id)) {
+    return res.status(400).json({
+      success: false,
+      message: "ID user harus berupa angka yang valid",
+    });
+  }
+
+  const updatedUser = await prisma.users.update({
     where: {
       id: id,
     },
@@ -78,22 +103,6 @@ export const updateUser = async (req, res) => {
       message: `User with ID: ${id} not found`,
     });
   }
-  await prisma.users.update({
-    where: {
-      id: id,
-    },
-    data: {
-      nama,
-      email,
-      role,
-    },
-  });
-
-  res.status(200).json({
-    success: true,
-    message: `User with ID: ${id} not found`,
-    data: user,
-  });
 };
 
 export const deleteUser = async (req, res) => {
@@ -131,6 +140,5 @@ export const isUserExist = async (id) => {
       id: id,
     },
   });
-
   return !!user;
 };

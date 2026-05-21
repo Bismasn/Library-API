@@ -8,13 +8,17 @@ import {
   deleteCategory,
 } from "../controllers/categories.controller.js";
 
+import {
+  categoryValidation,
+  updateCategoryValidation,
+} from "../validations//categories.validation.js";
 const router = express.Router();
 
 router.get("/", getAllCategories);
 router.get("/:id/books", getAllBooksByCategoryId);
 router.get("/:id", getCategoryById);
-router.post("/", createCategory);
-router.put("/:id", updateCategory);
+router.post("/", categoryValidation, createCategory);
+router.put("/:id", updateCategoryValidation, updateCategory);
 router.delete("/:id", deleteCategory);
 
 export default router;
