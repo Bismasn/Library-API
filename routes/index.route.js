@@ -5,18 +5,19 @@ import profileRoute from "./profiles.route.js";
 import categoryRoute from "./categories.route.js";
 import borrowingsRoute from "./borrowing.route.js";
 import authRoute from "./auth.route.js";
-
+import { authenticateToken } from "../middlewares/auth.middleware.js";
+import { authorizeAdmin } from "../middlewares/admin.middleware.js";
 const router = express.Router();
 
 router.get("/", (req, res) => {
   res.send("welcome to the API Library");
 });
 
-router.use("/books", booksRoute);
-router.use("/users", userRoute);
-router.use("/profiles", profileRoute);
-router.use("/categories", categoryRoute);
-router.use("/borrowings", borrowingsRoute);
 router.use("/auth", authRoute);
+router.use("/books", authenticateToken, booksRoute);
+router.use("/users", authorizeAdmin, authenticateToken, userRoute);
+router.use("/profiles", authorizeAdmin, authenticateToken, profileRoute);
+router.use("/categories", authenticateToken, categoryRoute);
+router.use("/borrowings", authorizeAdmin, authenticateToken, borrowingsRoute);
 
 export default router;
