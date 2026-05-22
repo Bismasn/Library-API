@@ -1,101 +1,154 @@
 import prisma from "../database.config.js";
+import logger from "../config/logger.config.js";
 
 export const getUsers = async (req, res) => {
-  //menggunakan prisma client untuk mengambil semua data buku dari database
-  const users = await prisma.users.findMany();
-  res.status(200).json({
-    success: true,
-    message: "Users Berhasi dimuat",
-    data: users,
-  });
+  try {
+    //menggunakan prisma client untuk mengambil semua data buku dari database
+    const users = await prisma.users.findMany();
+
+    logger.info({ count: users.length }, "Retrieved users from database");
+    res.status(200).json({
+      success: true,
+      message: "Users Berhasi dimuat",
+      data: users,
+    });
+  } catch (error) {
+    logger.error({ error: error.message }, "Failed to retrieve users");
+    res.status(500).json({
+      success: false,
+      message: "An error occurred while retrieving users",
+      error: error.message,
+    });
+  }
 };
 
 export const getUserById = async (req, res) => {
-  //merubah tipe data menjadi integer menggunakan parseInt
-  const id = parseInt(req.params.id);
-  //mencari user dengan Id yang sesuai
-  // const user = users.find((user) => user.id === id);
-  const user = await prisma.users.findUnique({
-    where: {
-      id: id,
-    },
-  });
-  //jika id user tidak ditemukan
-  if (!user) {
-    return res.status(404).json({
+  try {
+    //merubah tipe data menjadi integer menggunakan parseInt
+    const id = parseInt(req.params.id);
+    logger.debug({ userId: id }, "getUserById: Started");
+    //mencari user dengan Id yang sesuai
+    // const user = users.find((user) => user.id === id);
+    // Mengambil pengguna dengan ID yang sesuai dari database menggunakan Prisma Client
+    logger.debug({ userId: id }, "Finding user in database");
+    const user = await prisma.users.findUnique({
+      where: {
+        id: id,
+      },
+    });
+    //jika id user tidak ditemukan
+    if (!user) {
+      logger.warn({ userId: id }, "User not found");
+      return res.status(404).json({
+        success: false,
+        message: `User with ID: ${id} not found`,
+      });
+    }
+    logger.info({ userId: id }, "User retrieved successfully");
+    res.status(200).json({
+      success: true,
+      message: `User retrieved successfully`,
+      data: user,
+    });
+  } catch (error) {
+    logger.error({ error: error.message }, "Failed to retrieve user");
+    res.status(500).json({
       success: false,
-      message: `User with ID: ${id} not found`,
+      message: "An error occurred while retrieving user",
+      error: error.message,
     });
   }
-  res.status(200).json({
-    success: true,
-    message: `User retrieved successfully`,
-    data: user,
-  });
 };
 
 export const createUser = async (req, res) => {
-  const validationErrors = validationResult(req);
-  if (!validationErrors.isEmpty()) {
-    return res.status(400).json({
+  try {
+    logger.debug({ body: req.body }, "createUser: Started");
+    const validationErrors = validationResult(req);
+
+    if (!validationErrors.isEmpty()) {
+      return res.status(400).json({
+        success: false,
+        message: "validation error",
+        errors: validationErrors.array(),
+      });
+    }
+
+    // Menambahkan pengguna baru ke database menggunakan Prisma Client
+    logger.debug({ name, email, role }, "Creating user in database");
+    const { name, email, role } = req.body;
+    const newUser = await prisma.user.create({
+      data: {
+        name,
+        email,
+        role,
+      },
+    });
+
+    logger.info({ userId: user.id, email }, "User created successfully");
+    res.status(200).json({
+      success: true,
+      message: "User Created Successfully",
+      data: newUser,
+    });
+  } catch (error) {
+    logger.error({ error: error.message }, "Failed to create user");
+    res.status(500).json({
       success: false,
-      message: "validation error",
-      errors: validationErrors.array(),
+      message: "An error occurred while creating user",
+      error: error.message,
     });
   }
-
-  const { name, email, role } = req.body;
-  const newUser = await prisma.user.create({
-    data: {
-      name,
-      email,
-      role,
-    },
-  });
-
-  res.status(200).json({
-    success: true,
-    message: "User Created Successfully",
-    data: newUser,
-  });
 };
 
 export const updateUser = async (req, res) => {
-  const validationErrors = validationResult(req);
+  try {
+    const validationErrors = validationResult(req);
 
-  if (!validationErrors.isEmpty()) {
-    return res.status(400).json({
+    if (!validationErrors.isEmpty()) {
+      return res.status(400).json({
+        success: false,
+        message: "Validation error",
+        errors: validationErrors.array(),
+      });
+    }
+
+    const id = parseInt(req.params.id);
+    logger.debug({ userId: id, body: req.body }, "updateUser: Started");
+    const { name, email, password, role } = req.body;
+
+    if (isNaN(id)) {
+      return res.status(400).json({
+        success: false,
+        message: "ID user harus berupa angka yang valid",
+      });
+    }
+
+    // Mencari pengguna dengan ID yang sesuai di database menggunakan Prisma Client
+    logger.debug({ userId: id }, "Finding user in database");
+    const updatedUser = await prisma.users.update({
+      where: {
+        id: id,
+      },
+      data: {
+        name,
+        email,
+        password,
+        role,
+      },
+    });
+    res.status(200).json({
+      success: true,
+      message: `user with ID: ${id} updated successfully`,
+      data: updatedUser,
+    });
+  } catch (error) {
+    logger.error({ error: error.message }, "Failed to update user");
+    res.status(500).json({
       success: false,
-      message: "Validation error",
-      errors: validationErrors.array(),
+      message: "An error occurred while updating user",
+      error: error.message,
     });
   }
-
-  const id = parseInt(req.params.id);
-  const { name, email, role } = req.body;
-
-  if (isNaN(id)) {
-    return res.status(400).json({
-      success: false,
-      message: "ID user harus berupa angka yang valid",
-    });
-  }
-
-  const updatedUser = await prisma.users.update({
-    where: {
-      id: id,
-    },
-    data: {
-      name,
-      email,
-      role,
-    },
-  });
-  res.status(200).json({
-    success: true,
-    message: `user with ID: ${id} updated successfully`,
-    data: updatedUser,
-  });
 
   if (!userIndex) {
     return res.status(404).json({
@@ -106,31 +159,43 @@ export const updateUser = async (req, res) => {
 };
 
 export const deleteUser = async (req, res) => {
-  const id = parseInt(req.params.id);
+  try {
+    const id = parseInt(req.params.id);
+    logger.debug({ userId: id }, "deleteUser: Started");
 
-  const userIndex = await prisma.users.findIndex({
-    where: {
-      id: id,
-    },
-  });
+    // Mencari pengguna dengan ID yang sesuai di database menggunakan Prisma Client
+    logger.debug({ userId: id }, "Finding user in database");
+    const userIndex = await prisma.users.findIndex({
+      where: {
+        id: id,
+      },
+    });
 
-  if (!userIndex) {
-    res.send(`User with ID: ${id} not found`);
-    return res.status(404).json({
+    if (!userIndex) {
+      res.send(`User with ID: ${id} not found`);
+      return res.status(404).json({
+        success: false,
+        message: `User with ID: ${id} not found`,
+      });
+    }
+
+    await prisma.users.delete({
+      where: {
+        id: id,
+      },
+    });
+    res.status(200).json({
+      success: true,
+      message: "Users deleted successfully",
+    });
+  } catch (error) {
+    logger.error({ error: error.message }, "Failed to delete user");
+    res.status(500).json({
       success: false,
-      message: `User with ID: ${id} not found`,
+      message: "An error occurred while deleting user",
+      error: error.message,
     });
   }
-
-  await prisma.users.delete({
-    where: {
-      id: id,
-    },
-  });
-  res.status(200).json({
-    success: true,
-    message: "Users deleted successfully",
-  });
 };
 
 export const isUserExist = async (id) => {

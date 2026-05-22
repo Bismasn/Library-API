@@ -19,11 +19,16 @@ model Users {
   name      String
   email     String   @unique
   password  String   @db.VarChar(255)
-  role      String   @default("USER")
+  role      Role   @default(USER)
   createdAt DateTime @default(now())
 
   profiles Profiles?
   borrowings Borrowings[] // ini yang baru
+}
+
+enum Role {
+  USER
+  ADMIN
 }
 
 model Books {
@@ -32,6 +37,8 @@ model Books {
   author    String
   year      Int
   available Boolean  @default(true)
+  //tambahkan ini di bawah.
+  cloudinaryId String? 
   createdAt DateTime @default(now())
   categoryId Int?
 
