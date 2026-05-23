@@ -58,7 +58,7 @@ export const getBookById = async (req, res) => {
 
     res.status(200).json({
       success: true,
-      message: `Book with ID: ${id} not found`,
+      message: `Book with ID: ${id} found`,
       data: book,
     });
   } catch (error) {

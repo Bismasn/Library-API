@@ -73,18 +73,19 @@ export const createUser = async (req, res) => {
       });
     }
 
+    const { name, email, password, role } = req.body;
     // Menambahkan pengguna baru ke database menggunakan Prisma Client
     logger.debug({ name, email, role }, "Creating user in database");
-    const { name, email, role } = req.body;
-    const newUser = await prisma.user.create({
+    const newUser = await prisma.Users.create({
       data: {
         name,
         email,
-        role,
+        password,
+        role: role || "USER",
       },
     });
 
-    logger.info({ userId: user.id, email }, "User created successfully");
+    logger.info({ userId: newUser.id, email }, "User created successfully");
     res.status(200).json({
       success: true,
       message: "User Created Successfully",

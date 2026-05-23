@@ -20,7 +20,7 @@ export const register = async (req, res) => {
     }
 
     // Mendapatkan data pengguna baru dari request body
-    const { name, email, password } = req.body;
+    const { name, email, password, role } = req.body;
 
     // Mengecek apakah email sudah digunakan oleh pengguna lain di database menggunakan Prisma Client
     logger.debug({ email }, "Checking if email already exists");
@@ -42,13 +42,13 @@ export const register = async (req, res) => {
     );
 
     // Menambahkan pengguna baru ke database menggunakan Prisma Client
-    logger.debug({ name, email }, "Creating user in database");
+    logger.debug({ name, email, role }, "Creating user in database");
     const user = await prisma.users.create({
       data: {
         name,
         email,
         password: hashedPassword,
-        role: "USER",
+        role: role || "USER",
       },
       select: {
         id: true,

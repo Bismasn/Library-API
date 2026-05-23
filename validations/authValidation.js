@@ -16,6 +16,7 @@ export const registerValidation = [
     .withMessage("Password must be at least 6 characters long")
     .notEmpty()
     .withMessage("Password is required"),
+  body("role").optional().isIn(["USER", "ADMIN"]),
 ];
 
 export const loginValidation = [
