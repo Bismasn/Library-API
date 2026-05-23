@@ -17,6 +17,14 @@ router.get("/", (req, res) => {
   res.send("test vercel cuyyy");
 });
 
+router.use((req, res, next) => {
+  logger.debug(
+    { method: req.method, path: req.path, ip: req.ip },
+    "incoming request",
+  );
+  next();
+});
+
 router.use("/auth", authRoute);
 router.use("/books", authenticateToken, booksRoute);
 router.use("/users", authorizeAdmin, authenticateToken, userRoute);
