@@ -20,10 +20,6 @@ if (process.env.ENV !== "production") {
   });
 }
 
-router.get("/", (req, res) => {
-  logger.debug("GET / - Welcome route");
-});
-
 export default app;
 // Middleware untuk parsing JSON pada request body
 
