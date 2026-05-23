@@ -11,6 +11,8 @@ const router = express.Router();
 
 router.get("/", (req, res) => {
   res.send("welcome to the API Library");
+  res.send("Welcome to the API Library by Adi Aryasuta (ig: @adiiaryasutaa)");
+  res.send("test vercel cuyyy");
 });
 
 router.use("/auth", authRoute);
