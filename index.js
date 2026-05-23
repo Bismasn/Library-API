@@ -12,10 +12,15 @@ app.use(pinoHttp());
 app.use(express.json());
 app.use(router);
 
-app.listen(port, () => {
-  logger.info(`Example app listening on port ${port}`);
-});
+if (process.env.ENV !== "production") {
+  const port = process.env.PORT || 3000;
+  app.listen(port, () => {
+    logger.info(`Example app listening on port ${port}`);
+    logger.info("Application started successfully");
+  });
+}
 
+export default app;
 // Middleware untuk parsing JSON pada request body
 
 // // Ini adalah route yang harus dibuat
