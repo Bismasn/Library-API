@@ -7,10 +7,12 @@ import borrowingsRoute from "./borrowing.route.js";
 import authRoute from "./auth.route.js";
 import { authenticateToken } from "../middlewares/auth.middleware.js";
 import { authorizeAdmin } from "../middlewares/admin.middleware.js";
+import logger from "../config/logger.config.js";
 const router = express.Router();
 
 router.get("/", (req, res) => {
   res.send("welcome to the API Library");
+  logger.debug("GET / - Welcome route");
   res.send("Welcome to the API Library by Adi Aryasuta (ig: @adiiaryasutaa)");
   res.send("test vercel cuyyy");
 });
