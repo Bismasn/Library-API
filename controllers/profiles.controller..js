@@ -1,4 +1,4 @@
-import prisma from "../database.config.js";
+import prisma from "../config/database.config.js";
 
 export const getProfiles = async (req, res) => {
   try {

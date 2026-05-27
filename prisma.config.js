@@ -14,12 +14,4 @@ export default defineConfig({
     url: process.env["DATABASE_URL"],
     // directUrl: env("DIRECT_URL"), // Tambahkan ini
   },
-  // schema: {
-  //   kind: "prisma",
-  //   path: "prisma/schema.prisma",
-  // },
-  // datasource: {
-  //   url: env("DATABASE_URL"),
-  //   directUrl: env("DIRECT_URL"),
-  // },
 });

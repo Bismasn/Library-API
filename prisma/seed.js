@@ -1,4 +1,4 @@
-import prisma from "../database.config.js";
+import prisma from "../config/database.config";
 
 async function main() {
   console.log("Memulai pembersihan database...");

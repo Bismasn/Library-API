@@ -2,7 +2,7 @@ import bcrypt from "bcryptjs";
 import "dotenv/config";
 import { validationResult } from "express-validator";
 import jwt from "jsonwebtoken";
-import prisma from "../database.config.js";
+import prisma from "../config/database.config.js";
 import logger from "../config/logger.config.js";
 
 export const register = async (req, res) => {

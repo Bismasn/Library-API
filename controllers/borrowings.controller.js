@@ -1,4 +1,4 @@
-import prisma from "../database.config.js";
+import prisma from "../config/database.config.js";
 import logger from "../config/logger.config.js";
 import { isBookExist } from "./books.controller.js";
 import { isUserExist } from "./users.controller.js";

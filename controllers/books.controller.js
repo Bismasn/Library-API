@@ -1,4 +1,4 @@
-import prisma from "../database.config.js";
+import prisma from "../config/database.config.js";
 import { validationResult } from "express-validator";
 import { getFileUrl, uploadFile, deleteFile } from "./cloudinary.controller.js";
 import logger from "../config/logger.config.js";
