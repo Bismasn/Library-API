@@ -4,6 +4,7 @@ import {
   createBook,
   getBookById,
   getBooks,
+  getBookStatus,
   updateBook,
   deleteBook,
 } from "../controllers/books.controller.js";
@@ -21,6 +22,7 @@ const router = express.Router();
 
 router.get("/", getBooks);
 router.get("/:id", getBookById);
+router.get("/:id/status", getBookStatus);
 router.post(
   "/",
   authorizeAdmin,

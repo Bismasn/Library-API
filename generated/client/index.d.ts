@@ -2636,12 +2636,14 @@ export namespace Prisma {
   export type BooksAvgAggregateOutputType = {
     id: number | null
     year: number | null
+    stock: number | null
     categoryId: number | null
   }
 
   export type BooksSumAggregateOutputType = {
     id: number | null
     year: number | null
+    stock: number | null
     categoryId: number | null
   }
 
@@ -2650,7 +2652,7 @@ export namespace Prisma {
     title: string | null
     author: string | null
     year: number | null
-    available: boolean | null
+    stock: number | null
     cloudinaryId: string | null
     createdAt: Date | null
     categoryId: number | null
@@ -2661,7 +2663,7 @@ export namespace Prisma {
     title: string | null
     author: string | null
     year: number | null
-    available: boolean | null
+    stock: number | null
     cloudinaryId: string | null
     createdAt: Date | null
     categoryId: number | null
@@ -2672,7 +2674,7 @@ export namespace Prisma {
     title: number
     author: number
     year: number
-    available: number
+    stock: number
     cloudinaryId: number
     createdAt: number
     categoryId: number
@@ -2683,12 +2685,14 @@ export namespace Prisma {
   export type BooksAvgAggregateInputType = {
     id?: true
     year?: true
+    stock?: true
     categoryId?: true
   }
 
   export type BooksSumAggregateInputType = {
     id?: true
     year?: true
+    stock?: true
     categoryId?: true
   }
 
@@ -2697,7 +2701,7 @@ export namespace Prisma {
     title?: true
     author?: true
     year?: true
-    available?: true
+    stock?: true
     cloudinaryId?: true
     createdAt?: true
     categoryId?: true
@@ -2708,7 +2712,7 @@ export namespace Prisma {
     title?: true
     author?: true
     year?: true
-    available?: true
+    stock?: true
     cloudinaryId?: true
     createdAt?: true
     categoryId?: true
@@ -2719,7 +2723,7 @@ export namespace Prisma {
     title?: true
     author?: true
     year?: true
-    available?: true
+    stock?: true
     cloudinaryId?: true
     createdAt?: true
     categoryId?: true
@@ -2817,7 +2821,7 @@ export namespace Prisma {
     title: string
     author: string
     year: number
-    available: boolean
+    stock: number
     cloudinaryId: string | null
     createdAt: Date
     categoryId: number | null
@@ -2847,7 +2851,7 @@ export namespace Prisma {
     title?: boolean
     author?: boolean
     year?: boolean
-    available?: boolean
+    stock?: boolean
     cloudinaryId?: boolean
     createdAt?: boolean
     categoryId?: boolean
@@ -2862,7 +2866,7 @@ export namespace Prisma {
     title?: boolean
     author?: boolean
     year?: boolean
-    available?: boolean
+    stock?: boolean
     cloudinaryId?: boolean
     createdAt?: boolean
     categoryId?: boolean
@@ -2874,7 +2878,7 @@ export namespace Prisma {
     title?: boolean
     author?: boolean
     year?: boolean
-    available?: boolean
+    stock?: boolean
     cloudinaryId?: boolean
     createdAt?: boolean
     categoryId?: boolean
@@ -2886,13 +2890,13 @@ export namespace Prisma {
     title?: boolean
     author?: boolean
     year?: boolean
-    available?: boolean
+    stock?: boolean
     cloudinaryId?: boolean
     createdAt?: boolean
     categoryId?: boolean
   }
 
-  export type BooksOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "title" | "author" | "year" | "available" | "cloudinaryId" | "createdAt" | "categoryId", ExtArgs["result"]["books"]>
+  export type BooksOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "title" | "author" | "year" | "stock" | "cloudinaryId" | "createdAt" | "categoryId", ExtArgs["result"]["books"]>
   export type BooksInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     categories?: boolean | Books$categoriesArgs<ExtArgs>
     borrowings?: boolean | Books$borrowingsArgs<ExtArgs>
@@ -2918,7 +2922,7 @@ export namespace Prisma {
       title: string
       author: string
       year: number
-      available: boolean
+      stock: number
       cloudinaryId: string | null
       createdAt: Date
       categoryId: number | null
@@ -3352,7 +3356,7 @@ export namespace Prisma {
     readonly title: FieldRef<"Books", 'String'>
     readonly author: FieldRef<"Books", 'String'>
     readonly year: FieldRef<"Books", 'Int'>
-    readonly available: FieldRef<"Books", 'Boolean'>
+    readonly stock: FieldRef<"Books", 'Int'>
     readonly cloudinaryId: FieldRef<"Books", 'String'>
     readonly createdAt: FieldRef<"Books", 'DateTime'>
     readonly categoryId: FieldRef<"Books", 'Int'>
@@ -8313,7 +8317,7 @@ export namespace Prisma {
     title: 'title',
     author: 'author',
     year: 'year',
-    available: 'available',
+    stock: 'stock',
     cloudinaryId: 'cloudinaryId',
     createdAt: 'createdAt',
     categoryId: 'categoryId'
@@ -8452,13 +8456,6 @@ export namespace Prisma {
 
 
   /**
-   * Reference to a field of type 'Boolean'
-   */
-  export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Boolean'>
-    
-
-
-  /**
    * Reference to a field of type 'Float'
    */
   export type FloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float'>
@@ -8551,7 +8548,7 @@ export namespace Prisma {
     title?: StringFilter<"Books"> | string
     author?: StringFilter<"Books"> | string
     year?: IntFilter<"Books"> | number
-    available?: BoolFilter<"Books"> | boolean
+    stock?: IntFilter<"Books"> | number
     cloudinaryId?: StringNullableFilter<"Books"> | string | null
     createdAt?: DateTimeFilter<"Books"> | Date | string
     categoryId?: IntNullableFilter<"Books"> | number | null
@@ -8565,7 +8562,7 @@ export namespace Prisma {
     title?: SortOrder
     author?: SortOrder
     year?: SortOrder
-    available?: SortOrder
+    stock?: SortOrder
     cloudinaryId?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     categoryId?: SortOrderInput | SortOrder
@@ -8582,7 +8579,7 @@ export namespace Prisma {
     title?: StringFilter<"Books"> | string
     author?: StringFilter<"Books"> | string
     year?: IntFilter<"Books"> | number
-    available?: BoolFilter<"Books"> | boolean
+    stock?: IntFilter<"Books"> | number
     cloudinaryId?: StringNullableFilter<"Books"> | string | null
     createdAt?: DateTimeFilter<"Books"> | Date | string
     categoryId?: IntNullableFilter<"Books"> | number | null
@@ -8596,7 +8593,7 @@ export namespace Prisma {
     title?: SortOrder
     author?: SortOrder
     year?: SortOrder
-    available?: SortOrder
+    stock?: SortOrder
     cloudinaryId?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     categoryId?: SortOrderInput | SortOrder
@@ -8615,7 +8612,7 @@ export namespace Prisma {
     title?: StringWithAggregatesFilter<"Books"> | string
     author?: StringWithAggregatesFilter<"Books"> | string
     year?: IntWithAggregatesFilter<"Books"> | number
-    available?: BoolWithAggregatesFilter<"Books"> | boolean
+    stock?: IntWithAggregatesFilter<"Books"> | number
     cloudinaryId?: StringNullableWithAggregatesFilter<"Books"> | string | null
     createdAt?: DateTimeWithAggregatesFilter<"Books"> | Date | string
     categoryId?: IntNullableWithAggregatesFilter<"Books"> | number | null
@@ -8931,7 +8928,7 @@ export namespace Prisma {
     title: string
     author: string
     year: number
-    available?: boolean
+    stock?: number
     cloudinaryId?: string | null
     createdAt?: Date | string
     categories?: CategoriesCreateNestedOneWithoutBooksInput
@@ -8944,7 +8941,7 @@ export namespace Prisma {
     title: string
     author: string
     year: number
-    available?: boolean
+    stock?: number
     cloudinaryId?: string | null
     createdAt?: Date | string
     categoryId?: number | null
@@ -8956,7 +8953,7 @@ export namespace Prisma {
     title?: StringFieldUpdateOperationsInput | string
     author?: StringFieldUpdateOperationsInput | string
     year?: IntFieldUpdateOperationsInput | number
-    available?: BoolFieldUpdateOperationsInput | boolean
+    stock?: IntFieldUpdateOperationsInput | number
     cloudinaryId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     categories?: CategoriesUpdateOneWithoutBooksNestedInput
@@ -8969,7 +8966,7 @@ export namespace Prisma {
     title?: StringFieldUpdateOperationsInput | string
     author?: StringFieldUpdateOperationsInput | string
     year?: IntFieldUpdateOperationsInput | number
-    available?: BoolFieldUpdateOperationsInput | boolean
+    stock?: IntFieldUpdateOperationsInput | number
     cloudinaryId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     categoryId?: NullableIntFieldUpdateOperationsInput | number | null
@@ -8982,7 +8979,7 @@ export namespace Prisma {
     title: string
     author: string
     year: number
-    available?: boolean
+    stock?: number
     cloudinaryId?: string | null
     createdAt?: Date | string
     categoryId?: number | null
@@ -8992,7 +8989,7 @@ export namespace Prisma {
     title?: StringFieldUpdateOperationsInput | string
     author?: StringFieldUpdateOperationsInput | string
     year?: IntFieldUpdateOperationsInput | number
-    available?: BoolFieldUpdateOperationsInput | boolean
+    stock?: IntFieldUpdateOperationsInput | number
     cloudinaryId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -9002,7 +8999,7 @@ export namespace Prisma {
     title?: StringFieldUpdateOperationsInput | string
     author?: StringFieldUpdateOperationsInput | string
     year?: IntFieldUpdateOperationsInput | number
-    available?: BoolFieldUpdateOperationsInput | boolean
+    stock?: IntFieldUpdateOperationsInput | number
     cloudinaryId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     categoryId?: NullableIntFieldUpdateOperationsInput | number | null
@@ -9381,11 +9378,6 @@ export namespace Prisma {
     _max?: NestedDateTimeFilter<$PrismaModel>
   }
 
-  export type BoolFilter<$PrismaModel = never> = {
-    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
-    not?: NestedBoolFilter<$PrismaModel> | boolean
-  }
-
   export type StringNullableFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel> | null
     in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
@@ -9427,7 +9419,7 @@ export namespace Prisma {
     title?: SortOrder
     author?: SortOrder
     year?: SortOrder
-    available?: SortOrder
+    stock?: SortOrder
     cloudinaryId?: SortOrder
     createdAt?: SortOrder
     categoryId?: SortOrder
@@ -9436,6 +9428,7 @@ export namespace Prisma {
   export type BooksAvgOrderByAggregateInput = {
     id?: SortOrder
     year?: SortOrder
+    stock?: SortOrder
     categoryId?: SortOrder
   }
 
@@ -9444,7 +9437,7 @@ export namespace Prisma {
     title?: SortOrder
     author?: SortOrder
     year?: SortOrder
-    available?: SortOrder
+    stock?: SortOrder
     cloudinaryId?: SortOrder
     createdAt?: SortOrder
     categoryId?: SortOrder
@@ -9455,7 +9448,7 @@ export namespace Prisma {
     title?: SortOrder
     author?: SortOrder
     year?: SortOrder
-    available?: SortOrder
+    stock?: SortOrder
     cloudinaryId?: SortOrder
     createdAt?: SortOrder
     categoryId?: SortOrder
@@ -9464,15 +9457,8 @@ export namespace Prisma {
   export type BooksSumOrderByAggregateInput = {
     id?: SortOrder
     year?: SortOrder
+    stock?: SortOrder
     categoryId?: SortOrder
-  }
-
-  export type BoolWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
-    not?: NestedBoolWithAggregatesFilter<$PrismaModel> | boolean
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedBoolFilter<$PrismaModel>
-    _max?: NestedBoolFilter<$PrismaModel>
   }
 
   export type StringNullableWithAggregatesFilter<$PrismaModel = never> = {
@@ -9864,10 +9850,6 @@ export namespace Prisma {
     connect?: ReviewWhereUniqueInput | ReviewWhereUniqueInput[]
   }
 
-  export type BoolFieldUpdateOperationsInput = {
-    set?: boolean
-  }
-
   export type NullableStringFieldUpdateOperationsInput = {
     set?: string | null
   }
@@ -10173,11 +10155,6 @@ export namespace Prisma {
     _max?: NestedDateTimeFilter<$PrismaModel>
   }
 
-  export type NestedBoolFilter<$PrismaModel = never> = {
-    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
-    not?: NestedBoolFilter<$PrismaModel> | boolean
-  }
-
   export type NestedStringNullableFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel> | null
     in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
@@ -10201,14 +10178,6 @@ export namespace Prisma {
     gt?: number | IntFieldRefInput<$PrismaModel>
     gte?: number | IntFieldRefInput<$PrismaModel>
     not?: NestedIntNullableFilter<$PrismaModel> | number | null
-  }
-
-  export type NestedBoolWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
-    not?: NestedBoolWithAggregatesFilter<$PrismaModel> | boolean
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedBoolFilter<$PrismaModel>
-    _max?: NestedBoolFilter<$PrismaModel>
   }
 
   export type NestedStringNullableWithAggregatesFilter<$PrismaModel = never> = {
@@ -10578,7 +10547,7 @@ export namespace Prisma {
     title: string
     author: string
     year: number
-    available?: boolean
+    stock?: number
     cloudinaryId?: string | null
     createdAt?: Date | string
     categories?: CategoriesCreateNestedOneWithoutBooksInput
@@ -10590,7 +10559,7 @@ export namespace Prisma {
     title: string
     author: string
     year: number
-    available?: boolean
+    stock?: number
     cloudinaryId?: string | null
     createdAt?: Date | string
     categoryId?: number | null
@@ -10649,7 +10618,7 @@ export namespace Prisma {
     title?: StringFieldUpdateOperationsInput | string
     author?: StringFieldUpdateOperationsInput | string
     year?: IntFieldUpdateOperationsInput | number
-    available?: BoolFieldUpdateOperationsInput | boolean
+    stock?: IntFieldUpdateOperationsInput | number
     cloudinaryId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     categories?: CategoriesUpdateOneWithoutBooksNestedInput
@@ -10661,7 +10630,7 @@ export namespace Prisma {
     title?: StringFieldUpdateOperationsInput | string
     author?: StringFieldUpdateOperationsInput | string
     year?: IntFieldUpdateOperationsInput | number
-    available?: BoolFieldUpdateOperationsInput | boolean
+    stock?: IntFieldUpdateOperationsInput | number
     cloudinaryId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     categoryId?: NullableIntFieldUpdateOperationsInput | number | null
@@ -10730,7 +10699,7 @@ export namespace Prisma {
     title: string
     author: string
     year: number
-    available?: boolean
+    stock?: number
     cloudinaryId?: string | null
     createdAt?: Date | string
     borrowings?: BorrowingsCreateNestedManyWithoutBookInput
@@ -10742,7 +10711,7 @@ export namespace Prisma {
     title: string
     author: string
     year: number
-    available?: boolean
+    stock?: number
     cloudinaryId?: string | null
     createdAt?: Date | string
     borrowings?: BorrowingsUncheckedCreateNestedManyWithoutBookInput
@@ -10783,7 +10752,7 @@ export namespace Prisma {
     title?: StringFilter<"Books"> | string
     author?: StringFilter<"Books"> | string
     year?: IntFilter<"Books"> | number
-    available?: BoolFilter<"Books"> | boolean
+    stock?: IntFilter<"Books"> | number
     cloudinaryId?: StringNullableFilter<"Books"> | string | null
     createdAt?: DateTimeFilter<"Books"> | Date | string
     categoryId?: IntNullableFilter<"Books"> | number | null
@@ -10819,7 +10788,7 @@ export namespace Prisma {
     title: string
     author: string
     year: number
-    available?: boolean
+    stock?: number
     cloudinaryId?: string | null
     createdAt?: Date | string
     categories?: CategoriesCreateNestedOneWithoutBooksInput
@@ -10831,7 +10800,7 @@ export namespace Prisma {
     title: string
     author: string
     year: number
-    available?: boolean
+    stock?: number
     cloudinaryId?: string | null
     createdAt?: Date | string
     categoryId?: number | null
@@ -10890,7 +10859,7 @@ export namespace Prisma {
     title?: StringFieldUpdateOperationsInput | string
     author?: StringFieldUpdateOperationsInput | string
     year?: IntFieldUpdateOperationsInput | number
-    available?: BoolFieldUpdateOperationsInput | boolean
+    stock?: IntFieldUpdateOperationsInput | number
     cloudinaryId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     categories?: CategoriesUpdateOneWithoutBooksNestedInput
@@ -10902,7 +10871,7 @@ export namespace Prisma {
     title?: StringFieldUpdateOperationsInput | string
     author?: StringFieldUpdateOperationsInput | string
     year?: IntFieldUpdateOperationsInput | number
-    available?: BoolFieldUpdateOperationsInput | boolean
+    stock?: IntFieldUpdateOperationsInput | number
     cloudinaryId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     categoryId?: NullableIntFieldUpdateOperationsInput | number | null
@@ -11038,7 +11007,7 @@ export namespace Prisma {
     title: string
     author: string
     year: number
-    available?: boolean
+    stock?: number
     cloudinaryId?: string | null
     createdAt?: Date | string
   }
@@ -11047,7 +11016,7 @@ export namespace Prisma {
     title?: StringFieldUpdateOperationsInput | string
     author?: StringFieldUpdateOperationsInput | string
     year?: IntFieldUpdateOperationsInput | number
-    available?: BoolFieldUpdateOperationsInput | boolean
+    stock?: IntFieldUpdateOperationsInput | number
     cloudinaryId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     borrowings?: BorrowingsUpdateManyWithoutBookNestedInput
@@ -11059,7 +11028,7 @@ export namespace Prisma {
     title?: StringFieldUpdateOperationsInput | string
     author?: StringFieldUpdateOperationsInput | string
     year?: IntFieldUpdateOperationsInput | number
-    available?: BoolFieldUpdateOperationsInput | boolean
+    stock?: IntFieldUpdateOperationsInput | number
     cloudinaryId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     borrowings?: BorrowingsUncheckedUpdateManyWithoutBookNestedInput
@@ -11071,7 +11040,7 @@ export namespace Prisma {
     title?: StringFieldUpdateOperationsInput | string
     author?: StringFieldUpdateOperationsInput | string
     year?: IntFieldUpdateOperationsInput | number
-    available?: BoolFieldUpdateOperationsInput | boolean
+    stock?: IntFieldUpdateOperationsInput | number
     cloudinaryId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }

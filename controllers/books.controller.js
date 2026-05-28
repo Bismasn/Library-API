@@ -1,6 +1,7 @@
 import prisma from "../config/database.config.js";
 import { validationResult } from "express-validator";
 import { getFileUrl, uploadFile, deleteFile } from "./cloudinary.controller.js";
+import { isCategoryExist } from "./categories.controller.js";
 import logger from "../config/logger.config.js";
 
 export const getBooks = async (req, res) => {
@@ -72,6 +73,90 @@ export const getBookById = async (req, res) => {
   }
 };
 
+// challenge menambahkan books status avaliable apa tidak
+// controller get book status
+export const getBookStatus = async (req, res) => {
+  try {
+    const bookId = parseInt(req.params.id);
+    //Ambil data stok buku
+    const book = await prisma.books.findUnique({
+      where: {
+        id: bookId,
+      },
+      select: {
+        title: true,
+        stock: true,
+      },
+    });
+
+    if (!book) {
+      return res.status(404).json({
+        success: false,
+        message: `Book with ID ${bookId} not found`,
+      });
+    }
+    // hitung berapa jumlah buku yang sedang dipinjam saat ini dan belum di kembalikan
+    const activeBorrowings = await prisma.borrowings.findMany({
+      where: {
+        bookId: bookId,
+        returned_at: null,
+      },
+      select: {
+        borrow_date: true,
+      },
+      orderBy: {
+        borrow_date: "asc",
+      },
+    });
+
+    const totalCopies = book.stock;
+    const borrowedCopies = activeBorrowings.length;
+    const availableCopies = Math.max(0, totalCopies - borrowedCopies);
+
+    //Mem=nentukan status badge buku
+    let status = "Available";
+    let nextAvailableDate = null;
+
+    if (availableCopies === 0) {
+      status = "all-borrowed";
+      // Jika semua dipinjam, ambil dueDate terdekat dari antrean pertama
+      if (activeBorrowings.length > 0) {
+        const earliestBorrow = activeBorrowings[0].borrow_date;
+
+        const estimatedReturn = new Date(earliestBorrow);
+        estimatedReturn.setDate(estimatedReturn.getDate() + 7);
+
+        nextAvailableDate = estimatedReturn;
+      }
+    } else if (availableCopies <= 2) {
+      // Kamu bisa sesuaikan batas "low-stock" ini (misal sisa <= 2)
+      status = "low-stock";
+    }
+
+    // 4. Return Response JSON
+    return res.status(200).json({
+      success: true,
+      bookId: bookId,
+      title: book.title,
+      badge: {
+        status: status, // available, low-stock, atau all-borrowed
+        totalCopies: totalCopies,
+        availableCopies: availableCopies,
+        borrowedCopies: borrowedCopies,
+        nextAvailableDate: nextAvailableDate
+          ? nextAvailableDate.toISOString().split("T")[0] // Format YYYY-MM-DD
+          : null,
+      },
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: "An error occurred while calculating book status",
+      error: error.message,
+    });
+  }
+};
+
 export const createBook = async (req, res) => {
   try {
     const validationErrors = validationResult(req);
@@ -85,11 +170,14 @@ export const createBook = async (req, res) => {
       });
     }
     // mendapatkan data buku baru dengan merequest ke body
-    const { categoryId, title, author, year } = req.body;
+    const { categoryId, title, author, year, stock } = req.body;
+    ///memastikan category id adalah number
+    const parseCategoryId = Number(categoryId);
+
     //menambahkan data buku baru ke database
     const categoryExists = await prisma.categories.findUnique({
       where: {
-        id: categoryId,
+        id: parseCategoryId,
       },
     });
 
@@ -118,24 +206,26 @@ export const createBook = async (req, res) => {
     }
     // Tambahkan logger
     logger.debug(
-      { title, author, year, categoryId },
+      { title, author, year, stock, categoryId },
       "Creating book in database",
     );
-    const book = await prisma.books.create({
+    const newBook = await prisma.books.create({
       data: {
-        categoryId,
+        categoryId: parseCategoryId,
         title,
         author,
-        year,
+        year: Number(year),
+        stock: Number(stock),
+        cloudinaryId,
       },
     });
 
     // Tambahkan logger
-    logger.info({ bookId: book.id, title }, "Book created successfully");
+    logger.info({ bookId: newBook.id, title }, "Book created successfully");
     res.status(201).json({
       success: true,
       message: "Book created successfully",
-      data: book,
+      data: newBook,
     });
   } catch (error) {
     // Tambahkan logger
@@ -150,10 +240,13 @@ export const createBook = async (req, res) => {
 
 export const updateBook = async (req, res) => {
   try {
-    const validationErrors = validationResult(req);
+    // dapatkan ID buku yang akan diupdate  dari param URL
+    // Selanjutnya mengubah tipe datanya menjadi integer menggunakan parseInt
+    const id = parseInt(req.params.id);
 
+    //validasi id buku.
+    const validationErrors = validationResult(req);
     if (!validationErrors.isEmpty()) {
-      // Tambahkan logger
       logger.warn(
         { bookId: id, errors: validationErrors.array() },
         "Validation failed",
@@ -164,13 +257,6 @@ export const updateBook = async (req, res) => {
         errors: validationErrors.array(),
       });
     }
-    // dapatkan ID buku yang akan diupdate  dari param URL
-    // Selanjutnya mengubah tipe datanya menjadi integer menggunakan parseInt
-    const id = parseInt(req.params.id);
-    // Tambahkan logger
-    logger.debug({ bookId: id, body: req.body }, "updateBook: Started");
-
-    const { categoryId, title, author, year } = req.body;
 
     // Tambahkan logger
     logger.debug({ bookId: id }, "Finding book in database");
@@ -180,6 +266,7 @@ export const updateBook = async (req, res) => {
         id: id,
       },
     });
+
     //pengkondisian ketika buku ditemukan atau tidak
     if (!book) {
       // Tambahkan logger
@@ -189,12 +276,12 @@ export const updateBook = async (req, res) => {
         message: `Book with ID: ${id} not found`,
       });
     }
-    // Mengecek apakah kategori dengan ID yang diberikan ada di database menggunakan fungsi isCategoryExist
-    const categoryExists = await prisma.categories.findUnique({
-      where: {
-        id: id,
-      },
-    });
+
+    // Tambahkan logger
+    logger.debug({ bookId: id, body: req.body }, "updateBook: Started");
+
+    const { categoryId, title, author, year, stock } = req.body;
+
     if (categoryId) {
       // Tambahkan logger
       logger.debug({ categoryId }, "Checking if category exists");
@@ -209,13 +296,12 @@ export const updateBook = async (req, res) => {
       }
     }
 
+    //handle upload cover
     const cover = req.file;
     let cloudinaryId = book.cloudinaryId;
-
     // Jika ada file cover yang diunggah, unggah ke Cloudinary dan dapatkan public_id-nya
     // Pengkondisian dibawah Jika buku sudah memiliki cover sebelumnya,
     // hapus file cover lama dari Cloudinary menggunakan public_id yang disimpan di database
-
     if (cover) {
       if (book.cloudinaryId) {
         // Tambahkan logger
@@ -244,15 +330,16 @@ export const updateBook = async (req, res) => {
     );
 
     // Update buku dengan ID yang dimasukan menggunakan Prisma Client
-    await prisma.books.update({
+    const updatedBook = await prisma.books.update({
       where: {
         id: id,
       },
       data: {
-        categoryId,
-        title,
-        author,
-        year,
+        categoryId: categoryId ? Number(categoryId) : book.categoryId,
+        title: title || book.title,
+        author: author || book.author,
+        year: year ? Number(year) : book.year,
+        stock: stock ? Number(stock) : book.stock,
         cloudinaryId,
       },
     });
@@ -262,7 +349,7 @@ export const updateBook = async (req, res) => {
     res.status(200).json({
       success: true,
       message: "Book updated successfully",
-      data: book,
+      data: updateBook,
     });
   } catch (error) {
     //Tambahkan logger

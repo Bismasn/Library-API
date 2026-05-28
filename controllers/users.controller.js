@@ -1,5 +1,6 @@
 import prisma from "../config/database.config.js";
 import logger from "../config/logger.config.js";
+import { validationResult } from "express-validator";
 
 export const getUsers = async (req, res) => {
   try {
@@ -183,7 +184,7 @@ export const deleteUser = async (req, res) => {
 
     // Mencari pengguna dengan ID yang sesuai di database menggunakan Prisma Client
     logger.debug({ userId: id }, "Finding user in database");
-    const userIndex = await prisma.users.findIndex({
+    const userIndex = await prisma.users.findUnique({
       where: {
         id: id,
       },

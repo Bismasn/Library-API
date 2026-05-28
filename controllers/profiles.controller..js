@@ -1,4 +1,5 @@
 import prisma from "../config/database.config.js";
+import logger from "../config/logger.config.js";
 
 export const getProfiles = async (req, res) => {
   try {
@@ -7,7 +8,7 @@ export const getProfiles = async (req, res) => {
     const profiles = await prisma.profiles.findMany();
     res.status(200).json({
       success: true,
-      message: "profiles Berhasi dimuat",
+      message: "Profiles retrieved Successfully",
       data: profiles,
     });
   } catch (error) {
@@ -20,6 +21,7 @@ export const getProfiles = async (req, res) => {
   }
 };
 
+// Get Profile By Id
 export const getProfileById = async (req, res) => {
   try {
     //merubah tipe data menjadi integer menggunakan parseInt
@@ -40,7 +42,8 @@ export const getProfileById = async (req, res) => {
     }
     res.status(200).json({
       success: true,
-      message: `Profile  with ID: ${id} not found`,
+      message: `Profile  with ID: ${id} found found`,
+      data: profile,
     });
   } catch (error) {
     logger.error({ error: error.message }, "Failed to retrieve profile");
@@ -55,7 +58,7 @@ export const getProfileById = async (req, res) => {
 export const createProfile = async (req, res) => {
   try {
     const { userId, address, phone } = req.body;
-    const newProfile = await prisma.profile.create({
+    const newProfile = await prisma.profiles.create({
       data: {
         userId,
         address,
@@ -63,10 +66,10 @@ export const createProfile = async (req, res) => {
       },
     });
 
-    res.status(200).json({
+    res.status(201).json({
       success: true,
       message: "Profile Created Successfully",
-      data: profile,
+      data: newProfile,
     });
   } catch (error) {
     logger.error({ error: error.message }, "Failed to create profile");
@@ -89,17 +92,17 @@ export const updateProfile = async (req, res) => {
         message: "ID Profile Harus Berupa Angka yang Valid",
       });
     }
-    const updatedProfile = await prisma.profile.findIndex({
+    const updatedProfile = await prisma.profiles.update({
       where: {
         id: id,
       },
       data: {
-        userId,
+        // userId: parseInt(userId),
         address,
         phone,
       },
     });
-    if (!updateProfile) {
+    if (!updatedProfile) {
       return res.status(404).json({
         success: false,
         message: `Profile with ID: ${id} not found`,
@@ -123,15 +126,14 @@ export const updateProfile = async (req, res) => {
 export const deleteProfile = async (req, res) => {
   try {
     const id = parseInt(req.params.id);
-
-    const userIndex = await prisma.profiles.findIndex({
+    const profileExists = await prisma.profiles.findUnique({
       where: {
         id: id,
       },
     });
 
-    if (!profileIndex) {
-      res.send(`Profile with ID: ${id} not found`);
+    if (!profileExists) {
+      logger.warn({ id }, "Delete failed: Profile not found");
       return res.status(404).json({
         success: false,
         message: `Profile with ID: ${id} not found`,
@@ -143,6 +145,8 @@ export const deleteProfile = async (req, res) => {
         id: id,
       },
     });
+
+    logger.info({ id }, "Profile deleted successfully");
     res.status(200).json({
       success: true,
       message: "profiles deleted successfully",

@@ -134,7 +134,7 @@ exports.Prisma.BooksScalarFieldEnum = {
   title: 'title',
   author: 'author',
   year: 'year',
-  available: 'available',
+  stock: 'stock',
   cloudinaryId: 'cloudinaryId',
   createdAt: 'createdAt',
   categoryId: 'categoryId'
