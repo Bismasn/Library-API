@@ -140,6 +140,15 @@ exports.Prisma.BooksScalarFieldEnum = {
   categoryId: 'categoryId'
 };
 
+exports.Prisma.ReviewScalarFieldEnum = {
+  id: 'id',
+  rating: 'rating',
+  comment: 'comment',
+  userId: 'userId',
+  bookId: 'bookId',
+  createdAt: 'createdAt'
+};
+
 exports.Prisma.ProfilesScalarFieldEnum = {
   id: 'id',
   userId: 'userId',
@@ -185,6 +194,7 @@ exports.Role = exports.$Enums.Role = {
 exports.Prisma.ModelName = {
   Users: 'Users',
   Books: 'Books',
+  Review: 'Review',
   Profiles: 'Profiles',
   Categories: 'Categories',
   Borrowings: 'Borrowings'

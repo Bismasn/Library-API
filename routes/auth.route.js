@@ -5,7 +5,7 @@ import { login, register } from "../controllers/auth.controllers.js";
 import {
   registerValidation,
   loginValidation,
-} from "../validations/authValidation.js";
+} from "../validations/auth.validation.js";
 
 const router = express.Router();
 

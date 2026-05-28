@@ -30,10 +30,18 @@ export const getUserById = async (req, res) => {
     //mencari user dengan Id yang sesuai
     // const user = users.find((user) => user.id === id);
     // Mengambil pengguna dengan ID yang sesuai dari database menggunakan Prisma Client
+
     logger.debug({ userId: id }, "Finding user in database");
     const user = await prisma.users.findUnique({
       where: {
         id: id,
+      },
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        role: true,
+        createdAt: true,
       },
     });
     //jika id user tidak ditemukan
@@ -44,6 +52,7 @@ export const getUserById = async (req, res) => {
         message: `User with ID: ${id} not found`,
       });
     }
+
     logger.info({ userId: id }, "User retrieved successfully");
     res.status(200).json({
       success: true,
@@ -116,11 +125,19 @@ export const updateUser = async (req, res) => {
     const id = parseInt(req.params.id);
     logger.debug({ userId: id, body: req.body }, "updateUser: Started");
     const { name, email, password, role } = req.body;
+    const loginUser = req.user;
 
     if (isNaN(id)) {
       return res.status(400).json({
         success: false,
         message: "ID user harus berupa angka yang valid",
+      });
+    }
+
+    // PROTEKSI SAKTI: Jika bukan admin DAN bukan pemilik akun, BLOKIR!
+    if (loginUser.role !== "ADMIN" && loginUser.id !== id) {
+      return res.status(403).json({
+        error: "Forbidden: Kamu tidak berhak mengubah data pengguna lain!",
       });
     }
 

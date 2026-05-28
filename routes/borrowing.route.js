@@ -9,13 +9,14 @@ import {
 } from "../controllers/borrowings.controller.js";
 
 import { borrowingValidation } from "../validations/borrowings.validation.js";
+import { authorizeAdmin } from "../middlewares/admin.middleware.js";
 
 const router = express.Router();
 
 router.get("/", getAllBorrowings);
 router.get("/:id", getBorrowingById);
 router.post("/", borrowingValidation, createBorrowing);
-router.put("/:id", returnBook);
+router.put("/return/:id", authorizeAdmin, returnBook);
 router.delete("/:id", deleteBorrowing);
 
 export default router;

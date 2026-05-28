@@ -12,11 +12,13 @@ import {
   updateUserValidation,
 } from "../validations/users.validation.js";
 const router = express.Router();
+import { authorizeAdmin } from "../middlewares/admin.middleware.js";
+import { authorizeSelfOrAdmin } from "../middlewares/user-access.middleware.js";
 
-router.get("/", getUsers);
-router.get("/:id", getUserById);
-router.post("/",userValidation, createUser);
-router.put("/:id",updateUserValidation, updateUser);
-router.delete("/:id", deleteUser);
+router.get("/", authorizeAdmin, getUsers);
+router.get("/:id", authorizeSelfOrAdmin, getUserById);
+router.post("/", userValidation, createUser);
+router.put("/:id", updateUserValidation, updateUser);
+router.delete("/:id", authorizeAdmin, deleteUser);
 
 export default router;

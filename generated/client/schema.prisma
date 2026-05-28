@@ -23,7 +23,8 @@ model Users {
   createdAt DateTime @default(now())
 
   profiles   Profiles?
-  borrowings Borrowings[] // ini yang baru
+  borrowings Borrowings[] // tambahkan relasi borrowings
+  reviews    Review[]
 }
 
 enum Role {
@@ -43,7 +44,21 @@ model Books {
   categoryId   Int?
 
   categories Categories?  @relation(fields: [categoryId], references: [id])
-  borrowings Borrowings[] // ini yang baru
+  borrowings Borrowings[] // tambahkan relasi borrowings
+  reviews    Review[] // relasi ke tabel Review
+}
+
+model Review {
+  id        Int      @id @default(autoincrement())
+  rating    Int //validasi akan di tangani oleh express berkisar antara 1-5
+  comment   String
+  userId    Int
+  bookId    Int
+  createdAt DateTime @default(now())
+
+  // Relasi di Tabel ini
+  user Users @relation(fields: [userId], references: [id], onDelete: Cascade)
+  book Books @relation(fields: [bookId], references: [id], onDelete: Cascade)
 }
 
 model Profiles {

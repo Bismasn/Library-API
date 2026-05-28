@@ -5,9 +5,11 @@ import profileRoute from "./profiles.route.js";
 import categoryRoute from "./categories.route.js";
 import borrowingsRoute from "./borrowing.route.js";
 import authRoute from "./auth.route.js";
+import reviewRoute from "./review.route.js";
 import { authenticateToken } from "../middlewares/auth.middleware.js";
 import { authorizeAdmin } from "../middlewares/admin.middleware.js";
 import logger from "../config/logger.config.js";
+
 const router = express.Router();
 
 router.get("/", (req, res) => {
@@ -25,9 +27,10 @@ router.use((req, res, next) => {
 
 router.use("/auth", authRoute);
 router.use("/books", authenticateToken, booksRoute);
-router.use("/users", authorizeAdmin, authenticateToken, userRoute);
-router.use("/profiles", authorizeAdmin, authenticateToken, profileRoute);
 router.use("/categories", authenticateToken, categoryRoute);
-router.use("/borrowings", authorizeAdmin, authenticateToken, borrowingsRoute);
+router.use("/reviews", authenticateToken, reviewRoute);
+router.use("/users", authenticateToken, userRoute);
+router.use("/profiles", authenticateToken, authorizeAdmin, profileRoute);
+router.use("/borrowings", authenticateToken, borrowingsRoute);
 
 export default router;
