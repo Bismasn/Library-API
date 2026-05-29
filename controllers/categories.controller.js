@@ -1,6 +1,7 @@
 import prisma from "../config/database.config.js";
 import logger from "../config/logger.config.js";
 
+//controller untuk mengambil data semua kategori buku
 export const getAllCategories = async (req, res) => {
   try {
     logger.debug("getAllCategories: Started");
@@ -25,6 +26,7 @@ export const getAllCategories = async (req, res) => {
   }
 };
 
+//controller untuk mengambil semua data buku dengan memasukan id category
 export const getAllBooksByCategoryId = async (req, res) => {
   try {
     // Mendapatkan ID kategori yang akan diupdate dari parameter URL
@@ -44,6 +46,7 @@ export const getAllBooksByCategoryId = async (req, res) => {
       },
     });
 
+    //jika id yang dicari tidak ada lakukan ini.
     if (!category) {
       logger.warn({ categoryId: id }, "Category not found");
       return res.status(404).json({
@@ -74,6 +77,7 @@ export const getAllBooksByCategoryId = async (req, res) => {
   }
 };
 
+//controller untuk mengambil satu data kategori buku
 export const getCategoryById = async (req, res) => {
   try {
     // Mendapatkan ID kategori yang akan diupdate dari parameter URL
@@ -114,6 +118,7 @@ export const getCategoryById = async (req, res) => {
   }
 };
 
+//controller untuk menambahkan data kategori buku
 export const createCategory = async (req, res) => {
   try {
     logger.debug({ body: req.body }, "createCategory: Started");
@@ -147,6 +152,7 @@ export const createCategory = async (req, res) => {
   }
 };
 
+//controller untuk mengupdata satu data kategori buku
 export const updateCategory = async (req, res) => {
   try {
     // Mendapatkan ID buku yang akan diupdate dari parameter URL
@@ -201,6 +207,7 @@ export const updateCategory = async (req, res) => {
   }
 };
 
+//controller untuk menghapus satu data kategori buku
 export const deleteCategory = async (req, res) => {
   try {
     // Mendapatkan ID buku yang akan diupdate dari parameter URL
@@ -248,6 +255,7 @@ export const deleteCategory = async (req, res) => {
   }
 };
 
+//controller ini nantinya disambungkan dengan controller books.
 export const isCategoryExist = async (id) => {
   // Mencari kategori dengan ID yang sesuai di database menggunakan Prisma Client
   const category = await prisma.categories.findUnique({

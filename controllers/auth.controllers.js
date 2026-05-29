@@ -5,6 +5,7 @@ import jwt from "jsonwebtoken";
 import prisma from "../config/database.config.js";
 import logger from "../config/logger.config.js";
 
+//Fungsi Authentikasi User
 export const register = async (req, res) => {
   try {
     logger.debug({ body: req.body }, "register: Started");
@@ -74,6 +75,7 @@ export const register = async (req, res) => {
   }
 };
 
+// Fungsi authentikasi login untuk admin dan user sehingga dapat token.
 export const login = async (req, res) => {
   try {
     logger.debug({ body: req.body }, "login: Started");

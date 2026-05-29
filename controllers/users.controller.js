@@ -2,6 +2,7 @@ import prisma from "../config/database.config.js";
 import logger from "../config/logger.config.js";
 import { validationResult } from "express-validator";
 
+// CONTROLLER: get all user (admin)
 export const getUsers = async (req, res) => {
   try {
     //menggunakan prisma client untuk mengambil semua data buku dari database
@@ -23,6 +24,7 @@ export const getUsers = async (req, res) => {
   }
 };
 
+// CONTROLLER: Get User by ID ( admin dan user owner)
 export const getUserById = async (req, res) => {
   try {
     //merubah tipe data menjadi integer menggunakan parseInt
@@ -70,11 +72,13 @@ export const getUserById = async (req, res) => {
   }
 };
 
+// CONTROLLER: Create new User
 export const createUser = async (req, res) => {
   try {
     logger.debug({ body: req.body }, "createUser: Started");
     const validationErrors = validationResult(req);
 
+    //validasi
     if (!validationErrors.isEmpty()) {
       return res.status(400).json({
         success: false,
@@ -111,6 +115,7 @@ export const createUser = async (req, res) => {
   }
 };
 
+// CONTROLLER: Update user
 export const updateUser = async (req, res) => {
   try {
     const validationErrors = validationResult(req);
@@ -174,9 +179,16 @@ export const updateUser = async (req, res) => {
       success: false,
       message: `User with ID: ${id} not found`,
     });
+    if (!userIndex) {
+      return res.status(404).json({
+        success: false,
+        message: `User with ID: ${id} not found`,
+      });
+    }
   }
 };
 
+// CONTROLLER: Delete a User
 export const deleteUser = async (req, res) => {
   try {
     const id = parseInt(req.params.id);
@@ -217,6 +229,7 @@ export const deleteUser = async (req, res) => {
   }
 };
 
+// di pakai saat dilakukan nya peminjaman
 export const isUserExist = async (id) => {
   // Mencari pengguna dengan ID yang sesuai di database menggunakan Prisma Client
   const user = await prisma.users.findUnique({

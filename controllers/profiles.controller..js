@@ -1,6 +1,7 @@
 import prisma from "../config/database.config.js";
 import logger from "../config/logger.config.js";
 
+//controller untuk mengambil semua data profiles user
 export const getProfiles = async (req, res) => {
   try {
     logger.debug("getAllProfiles: Started");
@@ -21,7 +22,7 @@ export const getProfiles = async (req, res) => {
   }
 };
 
-// Get Profile By Id
+//controller untuk mengambil saty data profile user
 export const getProfileById = async (req, res) => {
   try {
     //merubah tipe data menjadi integer menggunakan parseInt
@@ -54,7 +55,7 @@ export const getProfileById = async (req, res) => {
     });
   }
 };
-
+//controller untuk membuat data  profile user
 export const createProfile = async (req, res) => {
   try {
     const { userId, address, phone } = req.body;
@@ -81,6 +82,7 @@ export const createProfile = async (req, res) => {
   }
 };
 
+//controller untuk mengupdate data profile user
 export const updateProfile = async (req, res) => {
   try {
     const id = parseInt(req.params.id);
@@ -123,6 +125,7 @@ export const updateProfile = async (req, res) => {
   }
 };
 
+//controller untuk mendelete data profile user
 export const deleteProfile = async (req, res) => {
   try {
     const id = parseInt(req.params.id);

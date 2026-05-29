@@ -23,10 +23,12 @@ export const authorizeSelfOrAdmin = (req, res, next) => {
   const isAdmin = req.user.role?.toUpperCase() === "ADMIN";
   const isUserOwner = currentUserId === requestedUserId;
 
+  //cek apakah Admin dan User yang bersangkutan login
   if (isAdmin || isUserOwner) {
     return next();
   }
 
+  //kalau tidak keluarkan output ini
   return res.status(403).json({
     success: false,
     message: "Forbidden: You do not have access to this data",

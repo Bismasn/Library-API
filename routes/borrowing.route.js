@@ -15,7 +15,7 @@ const router = express.Router();
 
 router.get("/", getAllBorrowings);
 router.get("/:id", getBorrowingById);
-router.post("/", borrowingValidation, createBorrowing);
+router.post("/create", borrowingValidation, createBorrowing);
 router.put("/return/:id", authorizeAdmin, returnBook);
 router.delete("/:id", deleteBorrowing);
 

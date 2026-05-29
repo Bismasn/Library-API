@@ -24,7 +24,7 @@ router.get("/", getBooks);
 router.get("/:id", getBookById);
 router.get("/:id/status", getBookStatus);
 router.post(
-  "/",
+  "/create",
   authorizeAdmin,
   upload.single("cover"),
   bookValidation,

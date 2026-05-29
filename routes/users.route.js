@@ -17,7 +17,7 @@ import { authorizeSelfOrAdmin } from "../middlewares/user-access.middleware.js";
 
 router.get("/", authorizeAdmin, getUsers);
 router.get("/:id", authorizeSelfOrAdmin, getUserById);
-router.post("/", userValidation, createUser);
+router.post("/create", userValidation, createUser);
 router.put("/:id", updateUserValidation, updateUser);
 router.delete("/:id", authorizeAdmin, deleteUser);
 

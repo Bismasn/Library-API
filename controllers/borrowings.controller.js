@@ -3,6 +3,7 @@ import logger from "../config/logger.config.js";
 import { isBookExist } from "./books.controller.js";
 import { isUserExist } from "./users.controller.js";
 
+// controller yang bisa mengakses semua data dari peminjaman. note(hanya admin yang punya wewenang)
 export const getAllBorrowings = async (req, res) => {
   try {
     logger.debug("getAllBorrowings: Started");
@@ -33,6 +34,7 @@ export const getAllBorrowings = async (req, res) => {
   }
 };
 
+// controller mengambil data buku yang di pinjam
 export const getBorrowingById = async (req, res) => {
   try {
     // Mendapatkan ID peminjaman yang akan diupdate dari parameter URL
@@ -73,6 +75,7 @@ export const getBorrowingById = async (req, res) => {
   }
 };
 
+// controller membuat data buku yang di pinjam
 export const createBorrowing = async (req, res) => {
   try {
     logger.debug({ body: req.body }, "createBorrowing: Started");
@@ -103,6 +106,7 @@ export const createBorrowing = async (req, res) => {
       });
     }
 
+    //tambahan jika stok buku kurang dari sama dengan 0 : buku habis dipinjam.
     if (bookExists.stock <= 0) {
       logger.info({ bookId }, "Book is Out of Stock");
       return res.status(404).json({
@@ -110,9 +114,11 @@ export const createBorrowing = async (req, res) => {
         message: `Book is out of stock`,
       });
     }
-
+    //transaksi disini dimaksudkan agar jika salah satu operasi gagal maka
+    //transaksi lainnya akan berhenti
     const result = await prisma.$transaction(async (tx) => {
-      const borrowing = await prisma.borrowings.create({
+      //membuat catatan peminjaman
+      const borrowing = await tx.borrowings.create({
         data: {
           userId: userId,
           bookId: bookId,
@@ -123,16 +129,19 @@ export const createBorrowing = async (req, res) => {
         },
       });
 
-      // Update ketersediaan buku menjadi false setelah dipinjam
+      // Update ketersediaan stok buku menjadi -1  setelah dipinjam
       logger.debug({ bookId }, "Updating book availability");
       await tx.books.update({
         where: { id: parseInt(bookId) },
         data: { stock: { decrement: 1 } },
       });
+
+      //mengembalikan hasil dari transaksi yang dilakukan
       return borrowing;
     });
     logger.debug({ userId, bookId }, "Creating borrowing in database");
 
+    //melapor bahwa peminjaman berhasil dilakukan
     logger.info({ borrowingId: result.id }, "Borrowing created successfully");
     res.status(201).json({
       success: true,
@@ -149,6 +158,7 @@ export const createBorrowing = async (req, res) => {
   }
 };
 
+// controller mengembalikan data buku yang di pinjam
 export const returnBook = async (req, res) => {
   try {
     // Mendapatkan ID peminjaman yang akan dikembalikan dari parameter URL
@@ -221,6 +231,7 @@ export const returnBook = async (req, res) => {
   }
 };
 
+// controller menghapus data buku yang di pinjam (kalau mau menghapusnya)
 export const deleteBorrowing = async (req, res) => {
   try {
     // Mendapatkan ID peminjaman yang akan dihapus dari parameter URL

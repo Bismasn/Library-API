@@ -3,8 +3,10 @@ import logger from "../config/logger.config.js";
 
 // CONTROLLER: Get All Reviews by Book ID (GET)
 export const getBookReviews = async (req, res) => {
+  //mengambil id buku dari URL
   const bookId = req.params.id;
   try {
+    //Validasi buku tersebut benar benar ada di database
     const bookExists = await prisma.books.findUnique({
       where: { id: Number(bookId) },
     });
@@ -14,6 +16,7 @@ export const getBookReviews = async (req, res) => {
     }
 
     logger.debug({ params: req.params }, "Get all reviews in database");
+    //Mengambil semua data review terkali degan bookID
     const reviews = await prisma.review.findMany({
       where: { bookId: Number(bookId) },
       include: {
@@ -24,11 +27,13 @@ export const getBookReviews = async (req, res) => {
           },
         },
       },
+      //mengurutkan data dari terbaru ke terlama
       orderBy: {
         createdAt: "desc",
       },
     });
 
+    //respons sukses ketika berhasil memuat
     return res.status(200).json({
       message: `Reviews for book ID ${bookId} fetched successfully`,
       data: reviews,

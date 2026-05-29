@@ -73,7 +73,7 @@ export const getBookById = async (req, res) => {
   }
 };
 
-// challenge menambahkan books status avaliable apa tidak
+// challenge menambahkan books status stok masih tersedia atau tidak.
 // controller get book status
 export const getBookStatus = async (req, res) => {
   try {
@@ -157,6 +157,7 @@ export const getBookStatus = async (req, res) => {
   }
 };
 
+// Controller untuk menambahkan buku ke dalam database
 export const createBook = async (req, res) => {
   try {
     const validationErrors = validationResult(req);
@@ -238,6 +239,7 @@ export const createBook = async (req, res) => {
   }
 };
 
+// Controller untuk mengupdate buku ke dalam database
 export const updateBook = async (req, res) => {
   try {
     // dapatkan ID buku yang akan diupdate  dari param URL
@@ -279,7 +281,6 @@ export const updateBook = async (req, res) => {
 
     // Tambahkan logger
     logger.debug({ bookId: id, body: req.body }, "updateBook: Started");
-
     const { categoryId, title, author, year, stock } = req.body;
 
     if (categoryId) {
@@ -371,10 +372,10 @@ export const deleteBook = async (req, res) => {
     // Selanjutnya mengubah tipe datanya menjadi integer menggunakan parseInt
     const id = parseInt(req.params.id);
 
-    // Tambahkan logger
+    // Tambahkan logger Debug
     logger.debug({ bookId: id }, "deleteBook: Started");
 
-    // Tambahkan logger
+    // Tambahkan logger Debug
     logger.debug({ bookId: id }, "Finding book in database");
 
     // Gunakan Prisma Clienet untuk mencari buku dengan ID yang sesuai di database
@@ -431,6 +432,7 @@ export const deleteBook = async (req, res) => {
   }
 };
 
+//controller ini nantinya disambungkan dengan controller borrowing pada saat peminjaman atau pengembalian.
 export const isBookExist = async (id) => {
   // Mencari buku dengan ID yang sesuai di database menggunakan Prisma Client
   const book = await prisma.books.findUnique({
