@@ -7,6 +7,7 @@ Dengan menggunkan Express.js dan Prisma ORM.
 * **Autentikasi** - JWT-based authentication
 * **Manajemen Pengguna** - User registration, profiles, dan roles
 * **Manajemen Buku** - CRUD operations untuk katalog buku
+* **Reivew Buku** - User bisa mereview buku
 * **Kategori Buku** - Organisasi buku berdasarkan kategori
 * **Peminjaman** - Tracking peminjaman dan pengembalian buku
 * **Cloud Storage** - Integrasi Cloudinary untuk upload gambar
@@ -79,7 +80,7 @@ Saat dijalankan sever akan berjalan di ```http://localhost:3000```
 ### Books
 * GET /books - List semua buku
 * GET /books/:id - Get detail buku
-* POST /books - Tambah buku baru (Auth required, Admin only)
+* POST /books/create - Tambah buku baru (Auth required, Admin only)
 * PUT /books/:id - Update buku (Auth required, Admin only)
 * DELETE /books/:id - Hapus buku (Auth required, Admin only)
 
@@ -87,7 +88,7 @@ Saat dijalankan sever akan berjalan di ```http://localhost:3000```
 * GET /categories - List semua kategori
 * GET /categories/:id - Get detail kategori
 * GET /categories/:id/books - Get buku berdasarkan kategori
-* POST /categories - Tambah kategori baru (Auth required, Admin only)
+* POST /categories/create - Tambah kategori baru (Auth required, Admin only)
 * PUT /categories/:id - Update kategori (Auth required, Admin only)
 * DELETE /categories/:id - Hapus kategori (Auth required, Admin only)
 
@@ -95,21 +96,25 @@ Saat dijalankan sever akan berjalan di ```http://localhost:3000```
 * GET /users - List semua pengguna (Auth required)
 * GET /users/:id - Get detail pengguna (Auth required)
 * GET /users/:id/profile - Get profil pengguna (Auth required)
-* POST /users - Tambah pengguna baru (Auth required)
+* POST /users/create - Tambah pengguna baru (Auth required)
 * PUT /users/:id - Update pengguna (Auth required)
 * DELETE /users/:id - Hapus pengguna (Auth required)
+
+### Reviews
+* GET /reivews/:id - Get semua review buku tersebut (Auth required)
+* POST /reviews/create - Buat review buku baru
 
 ### Profiles
 * GET /profiles - List semua profil (Auth required)
 * GET /profiles/:id - Get detail profil (Auth required)
-* POST /profiles - Buat profil baru (Auth required)
+* POST /profiles/create - Buat profil baru (Auth required)
 * PUT /profiles/:id - Update profil (Auth required)
 * DELETE /profiles/:id - Hapus profil (Auth required)
 
 ### Borrowings
 * GET /borrowings - List semua peminjaman (Auth required)
 * GET /borrowings/:id - Get detail peminjaman (Auth required)
-* POST /borrowings - Buat peminjaman baru (Auth required)
+* POST /borrowings/create - Buat peminjaman baru (Auth required)
 * PUT /borrowings/:id/return - Kembalikan buku (Auth required)
 * DELETE /borrowings/:id - Hapus peminjaman (Auth required)
 
